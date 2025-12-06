@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☕ Coffee Calculator | Neon Brew</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        /*
+         * --- CSS STYLES (Dark Teal & Neon Aesthetic) ---
+         */
+        :root {
+            /* Neon/Vibrant Color Palette */
+            --color-bg: #1A3E4D;           /* Dark Teal Background */
+            --color-primary-text: #E0FFFF;  /* Near-White/Pale Aqua Text */
+            --color-card-bg: #2C5E70;      /* Slightly Lighter Teal Card Background */
+            --color-accent-neon: #00FFC2;  /* Bright Neon Teal/Green */
+            --color-highlight-neon: #FF6BF6; /* Bright Neon Magenta */
+            --color-input-bg: #102B36;     /* Darker input fields */
+            --color-border: #4A8C9E;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-primary-text);
+            margin: 0;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            color: var(--color-highlight-neon); /* Neon Magenta for Title */
+            font-size: 2.2em;
+            margin-bottom: 5px;
+            text-shadow: 0 0 5px var(--color-highlight-neon);
+        }
+
+        p.subtitle {
+            text-align: center;
+            font-size: 1em;
+            margin-bottom: 30px;
+            color: var(--color-primary-text);
+        }
+
+        /* Card Styling for Sections */
+        .section-card {
+            background: var(--color-card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--color-border);
+        }
+
+        /* Inputs & Labels */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--color-accent-neon);
+            font-size: 0.9em;
+        }
+
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 1em;
+            background-color: var(--color-input-bg);
+            color: var(--color-primary-text);
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--color-accent-neon);
+            box-shadow: 0 0 5px var(--color-accent-neon);
+        }
+
+        /* Graph & Output */
+        h2 {
+            font-size: 1.5em;
+            color: var(--color-highlight-neon);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        /* * FIX: Container for Chart.js responsiveness 
+         * This div ensures the chart resizes within its parent without "slipping" 
+         */
+        .chart-container { 
+            position: relative; /* Needed for the chart to manage its responsiveness */
+            height: 250px; /* Set a fixed height for better mobile layout */
+            width: 100%;
+            background-color: var(--color-input-bg);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        /* Remove styling from the canvas itself, let the container handle it */
+        #savings-chart {
+            /* background-color: var(--color-input-bg);  -- Removed from here */
+            /* padding: 10px; -- Removed from here */
+            /* border-radius: 8px; -- Removed from here */
+        }
+
+        .total-spend {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+        
+        .total-spend span {
+            color: var(--color-accent-neon);
+            font-size: 1.2em;
+        }
+
+        /* Product Carousel */
+        .carousel-header {
+            margin-bottom: 20px;
+        }
+        
+        .carousel {
+            display: flex;
+            overflow-x: scroll; 
+            padding: 10px 0;
+            gap: 15px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        .product-card {
+            min-width: 220px;
+            background: var(--color-input-bg);
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            text-align: center;
+            scroll-snap-align: start;
+            border: 1px solid var(--color-border);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background-color: var(--color-card-bg); 
+            border: 1px solid var(--color-accent-neon);
+        }
+
+        .product-card h3 {
+            font-size: 1.1em;
+            margin: 0 0 5px 0;
+            color: var(--color-primary-text);
+        }
+
+        .product-card .price {
+            font-weight: bold;
+            color: var(--color-accent-neon);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .affiliate-link {
+            display: block;
+            background-color: var(--color-highlight-neon); 
+            color: #1A3E4D; 
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .affiliate-link:hover {
+            background-color: #FF9AFB; 
+        }
+        
+        /* Message when no products are affordable */
+        .no-products-message {
+            text-align: center;
+            padding: 20px;
+            color: var(--color-primary-text);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☕ Coffee Calculator</h1>
+        <p class="subtitle">Trade your daily café run for high-quality home brewing gear.</p>
+
+        <div class="section-card">
+            <h2>Calculate Your Potential Savings</h2>
+            <div class="input-group">
+                <label for="daily-spend">Daily Coffee Shop Spend (USD)</label>
+                <input type="number" id="daily-spend" placeholder="e.g., 5.50" value="5.50" min="0.01" step="0.50">
+
+                <label for="number-of-days">Number of Days to Save</label>
+                <input type="number" id="number-of-days" placeholder="e.g., 30" value="30" min="1" step="7">
+            </div>
+
+            <div class="total-spend">
+                Total Saved: <span id="total-saved-amount">$0.00</span>
+            </div>
+        </div>
+
+        <div class="section-card">
+             <h2>Savings Progress Over Time</h2>
+             <div class="chart-container">
+                 <canvas id="savings-chart"></canvas>
+             </div>
+        </div>
+
+        <div class="section-card">
+            <div class="carousel-header">
+                <h2>Upgrade Your Brew (Affordable Gear)</h2>
+            </div>
+            <div class="carousel" id="product-carousel">
+                </div>
+            <p id="no-products" class="no-products-message" style="display: none;">
+                Keep saving! Check back soon to see what gear you can afford.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // --- JAVASCRIPT LOGIC ---
+        
+        // 1. Product Data (Simulated Database/JSON)
+        const products = [
+            { id: 4, name: "V60 Pour Over Kit (Basic)", price: 25.00, img: "img/v60.jpg" },
+            { id: 3, name: "AeroPress Coffee Maker", price: 39.99, img: "img/aeropress.jpg" },
+            { id: 1, name: "Starter Drip Brewer", price: 45.00, img: "img/drip.jpg" },
+            { id: 5, name: "Gooseneck Electric Kettle", price: 75.00, img: "img/kettle.jpg" },
+            { id: 2, name: "Quality Hand Grinder", price: 150.00, img: "img/grinder.jpg" },
+            { id: 7, name: "Precision Coffee Scale", price: 280.00, img: "img/premium_scale.jpg" },
+            { id: 6, name: "Entry Espresso Machine", price: 350.00, img: "img/espresso.jpg" },
+        ].sort((a, b) => a.price - b.price); // Sort by price ascending
+
+        // 2. DOM Elements & Chart Setup
+        const dailySpendInput = document.getElementById('daily-spend');
+        const numberOfDaysInput = document.getElementById('number-of-days');
+        const totalSavedSpan = document.getElementById('total-saved-amount');
+        const productCarousel = document.getElementById('product-carousel');
+        const noProductsMessage = document.getElementById('no-products');
+        
+        // Initialize Chart
+        const ctx = document.getElementById('savings-chart').getContext('2d');
+        const savingsChart = new Chart(ctx, {
+            type: 'line', // Simple line chart for progress
+            data: {
+                labels: [], // Days will go here
+                datasets: [{
+                    label: 'Savings (USD)',
+                    data: [], // Savings amounts go here
+                    borderColor: 'rgb(0, 255, 194)', // Neon Teal
+                    backgroundColor: 'rgba(0, 255, 194, 0.1)',
+                    tension: 0.3, // Smoother line
+                    fill: true,
+                    pointBackgroundColor: 'rgb(255, 107, 246)' // Neon Magenta points
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Set to false to allow the height from the container to take effect
+                plugins: {
+                    legend: { display: false } 
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(74, 140, 158, 0.4)' }, 
+                        ticks: { color: 'rgb(224, 255, 255)' } 
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: 'rgb(224, 255, 255)' }
+                    }
+                }
+            }
+        });
+
+
+        // 3. Core Calculation & Graph Update Function
+        function calculateSavingsAndDisplay() {
+            const dailySpend = parseFloat(dailySpendInput.value) || 0;
+            const numberOfDays = parseInt(numberOfDaysInput.value) || 0;
+
+            const totalSaved = dailySpend * numberOfDays;
+            
+            // 3a. Update Total Savings Display
+            const formattedTotal = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(totalSaved);
+            totalSavedSpan.textContent = formattedTotal;
+            
+            // 3b. Update Chart Data
+            updateGraph(dailySpend, numberOfDays);
+
+            // 3c. Render Products
+            renderAffordableProducts(totalSaved);
+        }
+        
+        function updateGraph(dailySpend, days) {
+            let labels = [];
+            let data = [];
+            
+            // Only plot key points for a simple UX-focused graph
+            const intervals = [1, 7, 14, 30, 60, 90, 180]; 
+            
+            for (const interval of intervals) {
+                if (interval <= days) {
+                    labels.push(`Day ${interval}`);
+                    data.push(dailySpend * interval);
+                }
+            }
+            
+            // Ensure the final day is included if it's not a standard interval
+            if (days > 0 && !intervals.includes(days)) {
+                 labels.push(`Day ${days}`);
+                 data.push(dailySpend * days);
+            }
+
+            savingsChart.data.labels = labels;
+            savingsChart.data.datasets[0].data = data;
+            savingsChart.update();
+        }
+
+        // 4. Product Rendering Function
+        function renderAffordableProducts(maxPrice) {
+            const affordableProducts = products.filter(product => product.price <= maxPrice);
+
+            productCarousel.innerHTML = '';
+
+            if (affordableProducts.length > 0) {
+                noProductsMessage.style.display = 'none';
+                
+                affordableProducts.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <img src="${product.img}" alt="${product.name} (Image Placeholder)">
+                        <h3>${product.name}</h3>
+                        <p class="price">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price)}</p>
+                        <a href="#" class="affiliate-link" target="_blank">View & Buy Now</a>
+                    `;
+                    productCarousel.appendChild(card);
+                });
+            } else {
+                noProductsMessage.style.display = 'block';
+            }
+        }
+
+        // 5. Attach Event Listeners
+        dailySpendInput.addEventListener('input', calculateSavingsAndDisplay);
+        numberOfDaysInput.addEventListener('input', calculateSavingsAndDisplay);
+
+        // 6. Initial Run
+        calculateSavingsAndDisplay(); 
+    </script>
+</body>
+</html>
