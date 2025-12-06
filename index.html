@@ -240,141 +240,214 @@
         </div>
     </div>
 
-    <script>
-        // --- JAVASCRIPT LOGIC ---
-        
-        // 1. Product Data (Simulated Database/JSON)
-        const products = [
-            { id: 4, name: "V60 Pour Over Kit (Basic)", price: 25.00, img: "img/v60.jpg" },
-            { id: 3, name: "AeroPress Coffee Maker", price: 39.99, img: "img/aeropress.jpg" },
-            { id: 1, name: "Starter Drip Brewer", price: 45.00, img: "img/drip.jpg" },
-            { id: 5, name: "Gooseneck Electric Kettle", price: 75.00, img: "img/kettle.jpg" },
-            { id: 2, name: "Quality Hand Grinder", price: 150.00, img: "img/grinder.jpg" },
-            { id: 7, name: "Precision Coffee Scale", price: 280.00, img: "img/premium_scale.jpg" },
-            { id: 6, name: "Entry Espresso Machine", price: 350.00, img: "img/espresso.jpg" },
-        ].sort((a, b) => a.price - b.price); // Sort by price ascending
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+    // --- 1. PRODUCT DATA (Replace these with your actual affiliate links and image URLs) ---
+    // Products are sorted by price (lowest to highest) by default.
+    const products = [
+        { 
+            id: 1, 
+            name: "Hario V60 Plastic Dripper 02", 
+            price: 13.00, 
+            // *** IMPORTANT: Replace this placeholder image URL with a direct link to the V60 image ***
+            img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=Hario+V60", 
+            // *** YOUR FULL AMAZON LINK ***
+            link: "https://www.amazon.com/Hario-Plastic-Coffee-Dripper-Clear/dp/B0BWHKPCLJ/ref=sr_1_3?crid=33EPKFW08DFZN&dib=eyJ2IjoiMSJ9.yLo663wSbx7uA7RNz3sGOq5rk_EXy4AU7HuuWxYadiviuYTKPFM-Zv47VdrYX4ogqfZxFRmfy7ZsgilffpDEn98Ybu7jWSqMkab13uY5ZuyJ14hohkjGDp8p1OKn7d8wWAPugtExVX2yweaVrfmZeu7l6G8Zt-iOnkUC6NC-1SxeMSbSPDb0VSnZEstlBeoGeEPabJL18pZSij07YnLb6zNe-GnFBhn3t4L2ddv09JyP0Gm1hNIzyMglpDN3bW02e2xSNyC4qcI16GE-rnE05jBb46vv-OUm_g5pGHCFJFrYKdU&dib_tag=se&keywords=v60&qid=1764990702&sprefix=v60%2Caps%2C94&sr=8-3&th=1", 
+        },
+        { id: 2, name: "AeroPress Go Travel Coffee Maker", price: 39.95, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=AeroPress+Go", link: "https://your-affiliate-link-2.com" },
+        { id: 3, name: "Electric Coffee Grinder (Blade)", price: 49.99, img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=Blade+Grinder", link: "https://your-affiliate-link-3.com" },
+        { id: 4, name: "Gooseneck Pour-Over Kettle", price: 65.00, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Gooseneck+Kettle", link: "https://your-affiliate-link-4.com" },
+        { id: 5, name: "Digital Coffee Scale with Timer", price: 79.99, img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=Digital+Scale", link: "https://your-affiliate-link-5.com" },
+        { id: 6, name: "1Zpresso Q2 Manual Burr Grinder", price: 95.50, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Q2+Grinder", link: "https://your-affiliate-link-6.com" },
+        { id: 7, name: "Bodum Chambord French Press (8 Cup)", price: 109.99, img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=French+Press", link: "https://your-affiliate-link-7.com" },
+        { id: 8, name: "Breville Bambino Espresso Machine", price: 299.00, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Bambino+Espresso", link: "https://your-affiliate-link-8.com" },
+        { id: 9, name: "Baratza Encore ESP Grinder", price: 199.95, img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=Encore+Grinder", link: "https://your-affiliate-link-9.com" },
+        { id: 10, name: "Ratio Six Coffee Maker", price: 345.00, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Ratio+Six", link: "https://your-affiliate-link-10.com" }
+    ].sort((a, b) => a.price - b.price);
 
-        // 2. DOM Elements & Chart Setup
-        const dailySpendInput = document.getElementById('daily-spend');
-        const numberOfDaysInput = document.getElementById('number-of-days');
-        const totalSavedSpan = document.getElementById('total-saved-amount');
-        const productCarousel = document.getElementById('product-carousel');
-        const noProductsMessage = document.getElementById('no-products');
+
+    // --- 2. CALCULATOR LOGIC & RENDERING ---
+
+    // Initial state variables
+    let myChart;
+    const CHART_DAYS = 30; // 30 days of savings
+    
+    // Select DOM elements
+    const dailySpendInput = document.getElementById('dailySpend');
+    const nodySpendInput = document.getElementById('nodySpend');
+    const numDaysInput = document.getElementById('numDays');
+    const manaStepInput = document.getElementById('manaStep');
+    const totalSavedAmount = document.getElementById('totalSavedAmount');
+    const productCarousel = document.getElementById('productCarousel');
+    const savingsChartCanvas = document.getElementById('savingsChart');
+    const numberDaysInput = document.getElementById('numberDays');
+
+
+    // Functions for formatting and initialization
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    }
+    
+    function initInputs() {
+        dailySpendInput.value = dailySpendInput.value || 5.50;
+        nodySpendInput.value = nodySpendInput.value || 5.00;
+        numDaysInput.value = numDaysInput.value || 1.00;
+        numberDaysInput.value = numberDaysInput.value || 30; // New: Initialize 30 days
+        manaStepInput.value = manaStepInput.value || 1;
+    }
+
+    // Main calculation and rendering functions
+    function calculateSavings() {
+        const dailySpend = parseFloat(dailySpendInput.value) || 0;
+        const nodySpend = parseFloat(nodySpendInput.value) || 0;
+        const numDays = parseFloat(numDaysInput.value) || 0;
+        const totalDurationDays = parseFloat(numberDaysInput.value) || 30; // Use the new duration input
+
+        // 1. Calculate Daily Savings
+        const dailySavings = (dailySpend * numDays) - (nodySpend * numDays);
         
-        // Initialize Chart
-        const ctx = document.getElementById('savings-chart').getContext('2d');
-        const savingsChart = new Chart(ctx, {
-            type: 'line', // Simple line chart for progress
-            data: {
-                labels: [], // Days will go here
-                datasets: [{
-                    label: 'Savings (USD)',
-                    data: [], // Savings amounts go here
-                    borderColor: 'rgb(0, 255, 194)', // Neon Teal
-                    backgroundColor: 'rgba(0, 255, 194, 0.1)',
-                    tension: 0.3, // Smoother line
-                    fill: true,
-                    pointBackgroundColor: 'rgb(255, 107, 246)' // Neon Magenta points
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false, // Set to false to allow the height from the container to take effect
-                plugins: {
-                    legend: { display: false } 
+        // 2. Calculate Total Savings over the duration (e.g., 30 days)
+        const totalSavings = dailySavings * totalDurationDays;
+
+        // Update the savings display
+        totalSavedAmount.textContent = formatCurrency(totalSavings);
+        
+        // Update the chart
+        updateSavingsChart(dailySavings, totalDurationDays);
+        
+        // Render affordable products based on 100 days of savings
+        const maxPrice = dailySavings * 100; // Original logic: Savings over 100 days
+        renderAffordableProducts(maxPrice);
+    }
+
+    function updateSavingsChart(dailySavings, totalDurationDays) {
+        const labels = Array.from({ length: totalDurationDays }, (_, i) => `Day ${i + 1}`);
+        const data = labels.map((_, i) => dailySavings * (i + 1));
+        
+        // Get the suggested max Y-axis value
+        const maxDataValue = Math.max(...data);
+        const yMax = Math.ceil(maxDataValue / 50) * 50; // Round up to the nearest $50
+
+        if (myChart) {
+            myChart.data.labels = labels;
+            myChart.data.datasets[0].data = data;
+            myChart.options.scales.y.max = yMax;
+            myChart.update();
+        } else {
+            myChart = new Chart(savingsChartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Cumulative Savings',
+                        data: data,
+                        backgroundColor: '#FF6BF6', // Neon Pink/Purple
+                        borderColor: '#FF6BF6',
+                        borderWidth: 1
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(74, 140, 158, 0.4)' }, 
-                        ticks: { color: 'rgb(224, 255, 255)' } 
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Savings Duration (Days)',
+                                color: '#00FFC2' // Neon Teal
+                            },
+                            ticks: {
+                                color: '#FFFFFF',
+                                maxRotation: 45,
+                                minRotation: 45,
+                                callback: function(val, index) {
+                                    return index % Math.ceil(totalDurationDays / 10) === 0 ? this.getLabelForValue(val) : '';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            max: yMax,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Saved Amount (USD)',
+                                color: '#00FFC2' // Neon Teal
+                            },
+                            ticks: {
+                                color: '#FFFFFF',
+                                callback: function(value, index, values) {
+                                    return formatCurrency(value);
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
                     },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: 'rgb(224, 255, 255)' }
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Your Savings Progress',
+                            color: '#FFFFFF'
+                        }
                     }
                 }
-            }
-        });
-
-
-        // 3. Core Calculation & Graph Update Function
-        function calculateSavingsAndDisplay() {
-            const dailySpend = parseFloat(dailySpendInput.value) || 0;
-            const numberOfDays = parseInt(numberOfDaysInput.value) || 0;
-
-            const totalSaved = dailySpend * numberOfDays;
-            
-            // 3a. Update Total Savings Display
-            const formattedTotal = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format(totalSaved);
-            totalSavedSpan.textContent = formattedTotal;
-            
-            // 3b. Update Chart Data
-            updateGraph(dailySpend, numberOfDays);
-
-            // 3c. Render Products
-            renderAffordableProducts(totalSaved);
+            });
         }
+    }
+
+
+    function renderAffordableProducts(maxPrice) {
+        // Filter products that are less than or equal to the calculated max price
+        const affordableProducts = products.filter(product => product.price <= maxPrice);
         
-        function updateGraph(dailySpend, days) {
-            let labels = [];
-            let data = [];
-            
-            // Only plot key points for a simple UX-focused graph
-            const intervals = [1, 7, 14, 30, 60, 90, 180]; 
-            
-            for (const interval of intervals) {
-                if (interval <= days) {
-                    labels.push(`Day ${interval}`);
-                    data.push(dailySpend * interval);
-                }
-            }
-            
-            // Ensure the final day is included if it's not a standard interval
-            if (days > 0 && !intervals.includes(days)) {
-                 labels.push(`Day ${days}`);
-                 data.push(dailySpend * days);
-            }
+        // Clear the carousel first
+        productCarousel.innerHTML = ''; 
 
-            savingsChart.data.labels = labels;
-            savingsChart.data.datasets[0].data = data;
-            savingsChart.update();
+        if (affordableProducts.length === 0) {
+            productCarousel.innerHTML = '<p class="no-products-message">No products currently affordable with 100 days of savings. Save more!</p>';
+            return;
         }
 
-        // 4. Product Rendering Function
-        function renderAffordableProducts(maxPrice) {
-            const affordableProducts = products.filter(product => product.price <= maxPrice);
+        affordableProducts.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            // Generate the price-based Mana Step label
+            const manaStepValue = Math.ceil(product.price / ((parseFloat(dailySpendInput.value) * parseFloat(numDaysInput.value)) - (parseFloat(nodySpendInput.value) * parseFloat(numDaysInput.value))));
+            
+            card.innerHTML = `
+                <img src="${product.img}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p class="price">${formatCurrency(product.price)}</p>
+                <a href="${product.link}" class="affiliate-link" target="_blank">Upgrade Your Brew</a>
+                <div class="mana-step">
+                    <p>Unlock in: **${manaStepValue}** Days</p>
+                </div>
+            `;
+            productCarousel.appendChild(card);
+        });
+    }
 
-            productCarousel.innerHTML = '';
+    // Event listeners to trigger recalculation on input change
+    document.querySelectorAll('.input-field').forEach(input => {
+        input.addEventListener('input', calculateSavings);
+    });
 
-            if (affordableProducts.length > 0) {
-                noProductsMessage.style.display = 'none';
-                
-                affordableProducts.forEach(product => {
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
-                    card.innerHTML = `
-                        <img src="${product.img}" alt="${product.name} (Image Placeholder)">
-                        <h3>${product.name}</h3>
-                        <p class="price">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price)}</p>
-                        <a href="#" class="affiliate-link" target="_blank">View & Buy Now</a>
-                    `;
-                    productCarousel.appendChild(card);
-                });
-            } else {
-                noProductsMessage.style.display = 'block';
-            }
-        }
+    // Initial setup on page load
+    window.onload = () => {
+        initInputs();
+        calculateSavings();
+    };
 
-        // 5. Attach Event Listeners
-        dailySpendInput.addEventListener('input', calculateSavingsAndDisplay);
-        numberOfDaysInput.addEventListener('input', calculateSavingsAndDisplay);
-
-        // 6. Initial Run
-        calculateSavingsAndDisplay(); 
-    </script>
+</script>
 </body>
 </html>
