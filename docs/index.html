@@ -263,32 +263,33 @@
 <script>
     // --- 1. PRODUCT DATA (Uses v60.jpeg from the images folder) ---
     const products = [
-        { 
-            id: 1, 
-            name: "Hario V60 Plastic Dripper 02", 
-            price: 13.00, 
-            // *** FINAL IMAGE PATH: Assuming you uploaded the image here! ***
-            img: "images/v60.jpeg", 
-            // *** YOUR FULL AMAZON LINK ***
-            link: "https://www.amazon.com/Hario-Plastic-Coffee-Dripper-Clear/dp/B0BWHKPCLJ/ref=sr_1_3?crid=33EPKFW08DFZN&dib=eyJ2IjoiMSJ9.yLo663wSbx7uA7RNz3sGOq5rk_EXy4AU7HuuWxYadiviuYTKPFM-Zv47VdrYX4ogqfZxFRmfy7ZsgilffpDEn98Ybu7jWSqMkab13uY5ZuyJ14hohkjGDp8p1OKn7d8wWAPugtExVX2yweaVrfmZeu7l6G8Zt-iOnkUC6NC-1SxeMSbSPDb0VSnZEstlBeoGeEPabJL18pZSij07YnLb6zNe-GnFBhn3t4L2ddv09JyP0Gm1hNIzyMglpDN3bW02e2xSNyC4qcI16GE-rnE05jBb46vv-OUm_g5pGHCFJFrYKdU&dib_tag=se&keywords=v60&qid=1764990702&sprefix=v60%2Caps%2C94&sr=8-3&th=1", 
-        },
-        { id: 11, 
-              name: "Breville Bambino Espresso Machine", 
-              price: 299.95, 
-              img: "https://m.media-amazon.com/images/I/61egYXcL9OL._AC_SL1500_.jpg", 
-              link: "https://amzn.to/4ay0vft" 
-        },
 
-        // Remaining placeholder products for a full funnel:
-        { id: 2, name: "AeroPress Go Travel Coffee Maker", price: 39.95, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Affiliate+Item+2", link: "https://your-affiliate-link-2.com" },
-        { id: 3, name: "Electric Coffee Grinder (Blade)", price: 49.99, img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=Affiliate+Item+3", link: "https://your-affiliate-link-3.com" },
-        { id: 4, name: "Gooseneck Pour-Over Kettle", price: 65.00, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Affiliate+Item+4", link: "https://your-affiliate-link-4.com" },
-        { id: 5, name: "Digital Coffee Scale with Timer", price: 79.99, img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=Affiliate+Item+5", link: "https://your-affiliate-link-5.com" },
-        { id: 6, name: "1Zpresso Q2 Manual Burr Grinder", price: 95.50, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Affiliate+Item+6", link: "https://your-affiliate-link-6.com" },
-        { id: 7, name: "Bodum Chambord French Press (8 Cup)", price: 109.99, img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=Affiliate+Item+7", link: "https://your-affiliate-link-7.com" },
-        { id: 8, name: "Breville Bambino Espresso Machine", price: 299.00, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Affiliate+Item+8", link: "https://your-affiliate-link-8.com" },
-        { id: 9, name: "Baratza Encore ESP Grinder", price: 199.95, img: "https://via.placeholder.com/200x120/00FFC2/1A3E4D?text=Affiliate+Item+9", link: "https://your-affiliate-link-9.com" },
-        { id: 10, name: "Ratio Six Coffee Maker", price: 345.00, img: "https://via.placeholder.com/200x120/FF6BF6/1A3E4D?text=Affiliate+Item+10", link: "https://your-affiliate-link-10.com" }
+
+{ name: 'Breville Bambino Espresso Machine', price: 299.95, img: 'https://m.media-amazon.com/images/I/61egYXcL9OL._AC_SL1500_.jpg', link: 'https://amzn.to/4ay0vft' },
+{ name: 'Breville Barista Express Espresso Machine BES870XL, Brushed Stainless Steel', price: 699.95, img: 'https://m.media-amazon.com/images/I/71BvCt6eAFL._AC_SL1500_.jpg', link: 'https://amzn.to/4oCKU1G' },
+{ name: 'Breville Bambino Plus Espresso Machine', price: 499.95, img: 'https://m.media-amazon.com/images/I/515b5YnjKyL._AC_SX679_.jpg', link: 'https://amzn.to/4pyZM2g' },
+{ name: 'Fellow Gen 2 Ode Brew Grinder - Burr, Electric Coffee Bean Grinder with 31 Settings for Drip, French Press & Cold Brew - Small Footprint - Matte Black', price: 399.95, img: 'https://m.media-amazon.com/images/I/71trJPFvsqL._AC_SL1500_.jpg', link: 'https://amzn.to/3KMsihV' },
+{ name: 'Baratza Virtuoso+ Coffee Grinder', price: 249.95, img: 'https://m.media-amazon.com/images/I/61w9Ks-Rx1L._AC_SL1500_.jpg', link: 'https://amzn.to/4oIlOyH' },
+{ name: 'Keurig K-Duo Hot & Iced', price: 219.95, img: 'https://m.media-amazon.com/images/I/71lXNChJJPL._AC_SL1500_.jpg', link: 'https://amzn.to/449CCHl' },
+{ name: 'Fellow Opus Conical Burr Coffee Grinder - Espresso Grinder with 41 Settings for Espresso, Drip, French Press, & Cold Brew - Matte White', price: 199.95, img: 'https://m.media-amazon.com/images/I/512Qgo70cjL._AC_SL1500_.jpg', link: 'https://amzn.to/3XEZWco' },
+{ name: 'Baratza Encore Coffee Grinder', price: 149.95, img: 'https://m.media-amazon.com/images/I/61TrvcVsXEL._AC_SL1500_.jpg', link: 'https://amzn.to/48oUFfg' },
+{ name: 'Ember Temperature Control Smart Mug 2', price: 149.95, img: 'https://m.media-amazon.com/images/I/61VXH79P8sL._AC_SL1500_.jpg', link: 'https://amzn.to/4pXpAVW' },
+{ name: 'Cuisinart 14-Cup Coffee Maker', price: 119.95, img: 'https://m.media-amazon.com/images/I/71io+Gh4ApL._AC_SL1500_.jpg', link: 'https://amzn.to/3MtDY9H' },
+{ name: 'OXO Brew Conical Burr Coffee Grinder', price: 109.99, img: 'https://m.media-amazon.com/images/I/71DeUg8G7kS._AC_SL1500_.jpg', link: 'https://amzn.to/44dwNc1' },
+{ name: 'AeroPress Go Plus, Small Portable Coffee Maker Kit', price: 89.95, img: 'https://m.media-amazon.com/images/I/61zO7WdKHLL._AC_SL1500_.jpg', link: 'https://amzn.to/4oDlEs4' },
+{ name: 'Keurig K-Express Single Serve Coffee Maker', price: 79.99, img: 'https://m.media-amazon.com/images/I/61ttGfuxOAL._AC_SL1500_.jpg', link: 'https://amzn.to/48qsmNm' },
+{ name: 'AeroPress Original Coffee Press - All-in-One French Press, Pour-Over & Espresso Style Manual Brewer', price: 39.95, img: 'https://m.media-amazon.com/images/I/61u3sW4Vx4L._AC_SL1500_.jpg', link: 'https://amzn.to/48IPzJz' },
+{ name: 'Counter Culture Coffee - Whole Bean Coffee - Multi-Pack', price: 33, img: 'https://m.media-amazon.com/images/I/814JqEMx-PL._SL1500_.jpg', link: 'https://amzn.to/3MeSXV8' },
+{ name: 'Mug Warmer - 36W Coffee Mug Warmer for Desk with Temperature Display', price: 25.99, img: 'https://m.media-amazon.com/images/I/61SsDfH706L._AC_SL1500_.jpg', link: 'https://amzn.to/4a0z9P9' },
+{ name: 'Stumptown Coffee Roasters, Medium Roast Organic Whole Bean Coffee - Hundred Mile 12 Ounce Bag', price: 15.89, img: 'https://m.media-amazon.com/images/I/61FM4Im8biL._SL1500_.jpg', link: 'https://amzn.to/48D2Inh' },
+{ name: 'Maxwell House 27.5oz Ground Coffee Medium Original Roast', price: 14.89, img: 'https://m.media-amazon.com/images/I/71U3wxOoQHL._SL1500_.jpg', link: 'https://amzn.to/4oHYmkW' },
+{ name: 'Keurig K-Mini Mate Single Serve Coffee Maker', price: 69.99, img: 'https://m.media-amazon.com/images/I/618D34n8gLL._AC_SL1500_.jpg', link: 'https://amzn.to/3Kf42VC' },
+{ name: 'Hario "Simply Hario" V60 Glass Pour Over Coffee Set, Size 02', price: 44.5, img: 'https://m.media-amazon.com/images/I/61GYmsOttwL._AC_SL1500_.jpg', link: 'https://amzn.to/4iNE8oK' },
+{ name: 'Chemex Pour-Over Glass Coffeemaker', price: 48.93, img: 'https://m.media-amazon.com/images/I/51oVjI30xdL._AC_SL1000_.jpg', link: 'https://amzn.to/3KMiLY6' },
+
+
+
+        
     ].sort((a, b) => a.price - b.price);
 
 
