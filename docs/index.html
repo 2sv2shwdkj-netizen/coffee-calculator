@@ -168,6 +168,13 @@
             font-size: 1.1em;
             margin: 0 0 5px 0;
             color: var(--color-primary-text);
+
+            display: -webkit-box;
+                -webkit-line-clamp: 2;     /* show exactly 2 lines */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-height: 2.6em;        
         }
 
         .product-card .price {
